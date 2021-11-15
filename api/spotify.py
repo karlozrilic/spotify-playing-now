@@ -112,13 +112,21 @@ def makeSVG(data):
 @app.route("/<path:path>")
 def catch_all(path):
 
-    data = nowPlaying()
-    svg = makeSVG(data)
+    try:
+        data = nowPlaying()
+        svg = makeSVG(data)
 
-    resp = Response(svg, mimetype="image/svg+xml")
-    resp.headers["Cache-Control"] = "s-maxage=1"
-
-    return resp
+        resp = Response(svg, mimetype="image/svg+xml")
+        resp.headers["Cache-Control"] = "s-maxage=1"
+        
+        return resp
+    except:
+        svg = render_template("spotify-error.html.j2")
+        
+        resp = Response(svg, mimetype="image/svg+xml")
+        resp.headers["Cache-Control"] = "s-maxage=1"
+    
+        return resp
 
 if __name__ == "__main__":
     app.run(debug=True)
