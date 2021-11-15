@@ -108,6 +108,19 @@ def makeSVG(data):
 
     return render_template("spotify.html.j2", **dataDict)
 
+def makeErrorSVG():
+    barCount = 85
+    contentBar = "".join(["<div class='bar'></div>" for i in range(barCount)])
+    barCSS = barGen(barCount)
+
+    dataDict = {
+        "content_bar": contentBar,
+        "css_bar": barCSS
+    }
+
+    return render_template("spotify-error.html.j2", **dataDict)
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
@@ -121,7 +134,7 @@ def catch_all(path):
         
         return resp
     except:
-        svg = render_template("spotify-error.html.j2")
+        svg = makeErrorSVG()
         
         resp = Response(svg, mimetype="image/svg+xml")
         resp.headers["Cache-Control"] = "s-maxage=1"
